@@ -1,1 +1,0 @@
-GGTYGYC Programming
