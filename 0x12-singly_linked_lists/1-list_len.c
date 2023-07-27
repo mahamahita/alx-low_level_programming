@@ -1,28 +1,19 @@
-#ifndef LISTS_H
-#define LISTS_H
-#include <stdlib.h>
-#include <string.h>
+#include "lists.h"
 /**
- * struct list_s - singly list
- * @str: string - (malloced string)
- * @len: length of string
- * @next: points to next node
- *
- * Description: linked list node structure
- * for ALX project
+ * list_len - returns then number of elements in a list.
+ * @h: singly linked list.
+ * Return: number of elements in the list.
  */
-typedef struct list_s
+
+size_t list_len(const list_t *h)
 {
-	char *str;
-	unsigned int len;
-	struct list_s *next;
-} list_t;
+	size_t nelem;
 
-size_t print_list(const list_t *h);
-size_t list_len(const list_t *h);
-list_t *add_node(list_t **head, const char *str);
-list_t *add_node_end(list_t **head, const char *str);
-void free_list(list_t *head);
-
-#endif
-
+	nelem = 0;
+	while (h != NULL)
+	{
+		h = h->next;
+		nelem++;
+	}
+	return (nelem);
+}
