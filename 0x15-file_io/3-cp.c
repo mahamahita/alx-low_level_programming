@@ -7,47 +7,76 @@
 *@argc: number of arguments passed to the program
  * Return: no return.
  */
+int __exit(int error, char *str, int fd)
+{
+	switch (error)
+	{
+		case 97:
+			dprintf(STDERR_FILENO, "Usage: cp file_from file_to\n");
+			exit(error);
+		case 98:
+			dprintf(STDERR_FILENO, "Error: Can't read from file %s\n", s);
+			exit(error);
+		case 99:
+			dprintf(STDERR_FILENO, "Error: Can't write to %s\n", s);
+			exit(error);
+		case 100:
+			dprintf(STDERR_FILENO, "Error: Can't close fd %d\n", fd);
+			exit(error);
+		default:
+			return (0);
+	}
+}
+
+/**
+ * main - create a copy of file
+ *
+ * @argc: argument counter
+ * @argv: argument vector
+ *
+ * Return: 0 for success.
+*/
 int main(int argc, char *argv[])
 {
-	int r, w, x, m, n;
-	char buffer[BUFSIZ];
+	int file_in, file_out;
+	int read_stat, write_stat;
+	int close_in, close_out;
+	char buffer[MAXSIZE];
 
+	/*if arguments are not 3*/
 	if (argc != 3)
+		__exit(97, NULL, 0);
+
+	/*sets file descriptor for copy from file*/
+	file_in = open(argv[1], O_RDONLY);
+	if (file_in == -1)
+		__exit(98, argv[1], 0);
+
+	/*sets file descriptor for copy to file*/
+	file_out = open(argv[2], O_CREAT | O_TRUNC | O_WRONLY, 0664);
+	if (file_out == -1)
+		__exit(99, argv[2], 0);
+
+	/*reads file_in as long as its not NULL*/
+	while ((read_stat = read(file_in, buffer, MAXSIZE)) != 0)
 	{
-		dprintf(STDERR_FILENO, "Usage: cp file_from file_to\n");
-		exit(97);
+		if (read_stat == -1)
+			__exit(98, argv[1], 0);
+
+		/*copy and write contents to file_out*/
+		write_stat = write(file_out, buffer, read_stat);
+		if (write_stat == -1)
+			__exit(99, argv[2], 0);
 	}
-	r = open(argv[1], O_RDONLY);
-	if (r < 0)
-	{
-		dprintf(STDERR_FILENO, "Error: Can't read from file %s\n", argv[1]);
-		exit(98);
-	}
-	w = open(argv[2], O_CREAT | O_WRONLY | O_TRUNC, 0664);
-	while ((x = read(r, buffet, BUFSIZ)) > 0)
-	{
-		if (w < 0 || write(w, buffer, x) != x)
-		{
-			dprintf(STDERR_FILENO, "Error: Can't write to %s\n", argv[2]);
-			close(r);
-			exit(99);
-		}
-	}
-	if (x < 0)
-	{
-		dprintf(STDERR_FILENO, "Error: Can't read from file %s\n", argv[1]);
-		exit(98);
-	}
-	m = close(r);
-	n = close(w);
-	if (m < 0 || n < 0)
-	{
-		if (m < 0)
-			dprintf(STDERR_FILENO, "Error: Can't close fd %d\n", r);
-		if (n < 0)
-			dprintf(STDERR_FILENO, "Error: Can't close fd %d\n", w);
-		exit(100);
-	}
+
+	close_in = close(file_in); /*close file_in*/
+	if (close_in == -1)
+		__exit(100, NULL, file_in);
+
+	close_out = close(file_out); /*close file_out*/
+	if (close_out == -1)
+		__exit(100, NULL, file_out);
+
 	return (0);
 }
 
