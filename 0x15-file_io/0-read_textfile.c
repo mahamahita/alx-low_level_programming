@@ -9,41 +9,36 @@
  * Return: If the function fails or filename is NULL - 0.
  *         O/w - the actual number of bytes the function can read and print.
  */
-
 ssize_t read_textfile(const char *filename, size_t letters)
 {
 	int f;
-	ssize_t r, w;
-	char *buf;
+	int i, j;
+	char *buffer;
 
-	if (filename == NULL) 
+	if (!filename)
 		return (0);
-
-	f = open(filename, O_RDONLY); 
-
-	if (f == -1)
+	f= open(filename, O_RDONLY);
+	if (f < 0)
 		return (0);
-
-	buf = malloc(sizeof(char) * letters);
-	if (buff== NULL)
+	buffer = malloc(sizeof(char) * letters);
+	if (!buffer)
+		return (0);
+	i = read(f, buffer, letters);
+	if (i < 0)
 	{
-		free(buf);
+		free(buffer);
 		return (0);
 	}
-
-	r = read(f, buf, letters); 
-	if (r == -1) 
+	buf[i] = '\0';
+	close(f);
+	j = write(STDOUT_FILENO, buffer, i);
+	if (j < 0)
+	{
+		free(buffer);
 		return (0);
-
-	w = write(STDOUT_FILENO, buffer, r); 
-	if (w == -1 || r != w) 
-		return (0);
-
-	free(buf);
-
-	close(f); 
-
-	return (w);
+	}
+	free(buffer);
+	return (j);
 }
 
 
