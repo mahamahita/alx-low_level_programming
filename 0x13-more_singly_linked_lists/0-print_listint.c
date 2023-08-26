@@ -3,6 +3,11 @@
 
 /**
  * print_listint - function that prints all the elements of a listint_t list.
+  * @h: pointer to the head of linked list.
+  * @node_count: count numbers of lists's nodes
+  * @n: go to next bode
+  * @next: next node
+  * Return: all the elements of the list.
  */
 
 
