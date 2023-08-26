@@ -2,8 +2,7 @@
 #include <stdio.h>
 
 /**
- * error_file - checks if files can be opened.
- * main - main function
+ * error_file - checks if files can be opened
  * @file_from: file_from.
  * @file_to: file_to.
  * @argv: arguments vector.
@@ -22,6 +21,13 @@ void error_file(int file_from, int file_to, char *argv[])
 		exit(99);
 	}
 }
+
+/**
+ * main -  main function
+ * argc:
+ * argv:
+ * return : print 0 or return value
+ */
 
 int main(int argc, char *argv[])
 {
