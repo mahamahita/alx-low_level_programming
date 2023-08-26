@@ -1,7 +1,9 @@
 #include "lists.h"
+#include <stdlib.h>
+#include <stdio.h>
 
 /**
- * free_listp - function that prints a listint_t linked list.
+ * print_listint_safe - function that prints a listint_t linked list.
  * @head: pointer to the  head of the linked list
  *
  * Return: new_node or void
